@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>대학 미리 보기 | 국민대학교 논술고사 학부모 라운지</title>
+<meta name="description" content="시험이 진행되는 동안, 자녀가 다닐 캠퍼스를 먼저 둘러보세요.">
+<meta name="theme-color" content="#0A2B5E">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* KMU 80주년 서체 — 본문: 해옹 산스 / 제목: 성곡 세미세리프 */
+@font-face{
+  font-family:"KMU80 Haeong";
+  src:url("fonts/KMU80_Haeong_Sans.woff2") format("woff2");
+  font-weight:100 900; font-display:swap;
+}
+@font-face{
+  font-family:"KMU80 Sungkok";
+  src:url("fonts/KMU80_Sungkok_SemiSerif.woff2") format("woff2");
+  font-weight:100 900; font-display:swap;
+}
+
+:root{
+  --navy:#0A2B5E; --navy-deep:#061B3D; --gold:#F2B233;
+  --bg:#F5F7FB; --card:#FFFFFF; --line:#E2E7EF; --line-strong:#D3DAE6;
+  --ink:#1A1F2B; --ink-2:#3B4456; --ink-3:#5A6476;
+  --tint-blue:#DCE5F3; --tint-gold:#FCEBC4; --tint-green:#E3EADF; --tint-sel:#EEF3FB;
+  --spring:#E8829B; --summer:#2E9A5E; --autumn:#D9692A; --winter:#5B8FCF;
+  --f-title:"KMU80 Sungkok","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"KMU80 Haeong","Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-synthesis:none;background:#E9EDF4;color:var(--ink);font-family:var(--f-body);-webkit-font-smoothing:antialiased;word-break:keep-all}
+button{font-family:inherit}
+a{color:var(--navy)} a:hover{color:var(--navy-deep)}
+
+.app{position:relative;max-width:560px;min-height:100vh;margin:0 auto;background:var(--bg);padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+
+/* 헤더 */
+.head{padding:20px 20px 0;display:flex;flex-direction:column;gap:6px}
+.logo{display:block;width:min(100%,330px);height:auto;margin:0 0 16px}
+.eyebrow{margin:0;font-size:13px;font-weight:500;color:var(--ink-3)}
+.head h1{margin:0;font-family:var(--f-title);font-size:30px;font-weight:400;color:var(--navy);letter-spacing:-.5px}
+.lead{margin:0;font-size:15px;line-height:22px;color:var(--ink-2)}
+
+/* 캠퍼스 사계 히어로 */
+.hero{margin:18px 20px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.hero-media{position:relative;display:block;width:100%;aspect-ratio:16/9;border:0;padding:0;background:var(--navy);cursor:pointer;overflow:hidden}
+.hero-media img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(6,27,61,.35),rgba(6,27,61,0) 55%)}
+.play-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:64px;height:64px;border-radius:32px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(6,27,61,.25)}
+.badge{position:absolute;left:14px;top:14px;z-index:1;padding:4px 10px;border-radius:999px;background:var(--gold);color:var(--navy);font-size:12px;font-weight:700}
+.hero-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.hero-title{display:flex;flex-direction:column;gap:4px}
+.hero-title h2{margin:0;font-family:var(--f-title);font-size:18px;font-weight:400;color:var(--ink)}
+.hero-title p{margin:0;font-size:13px;color:var(--ink-3)}
+.seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px;background:var(--bg);border-radius:12px}
+.season{height:44px;border:0;border-radius:9px;background:transparent;color:var(--ink-3);font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.season .dot{width:8px;height:8px;border-radius:4px;background:var(--c)}
+.season[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(10,43,94,.12),inset 0 -3px 0 var(--c)}
+
+/* 탭 */
+.tabs{position:sticky;top:0;z-index:5;margin-top:18px;padding:10px 20px;background:rgba(245,247,251,.96);backdrop-filter:blur(6px);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;height:38px;padding:0 10px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;color:var(--ink-2);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{border-color:var(--navy);background:var(--navy);color:#fff;font-weight:700}
+.tab:focus-visible,.season:focus-visible,.row:focus-visible,.tile:focus-visible,.hero-media:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* 목록 */
+.panel{padding:4px 20px 0}
+.count{margin:6px 0 10px;font-size:13px;color:var(--ink-3)}
+.count b{color:var(--navy)}
+.section-h{margin:22px 0 10px;display:flex;align-items:baseline;gap:8px;font-family:var(--f-title);font-size:19px;font-weight:400;color:var(--navy)}
+.section-h:first-child{margin-top:8px}
+.section-h span{font-family:var(--f-body);font-size:13px;font-weight:500;color:var(--ink-3)}
+.list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.row{width:100%;display:flex;gap:14px;align-items:center;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;border-radius:10px}
+.thumb{position:relative;flex:0 0 120px;height:68px;border-radius:10px;overflow:hidden;background:var(--tint-blue)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .mini{position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:12px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}
+.meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.meta strong{font-size:15px;font-weight:700;color:var(--ink);line-height:21px}
+.meta small{font-size:13px;color:var(--ink-3)}
+
+/* 캠퍼스 2x2 */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;padding:0;list-style:none}
+.tile{width:100%;padding:0;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;text-align:left;cursor:pointer}
+.tile .ph{position:relative;aspect-ratio:16/10;background:var(--navy)}
+.tile .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .ph .mini{position:absolute;right:8px;bottom:8px;width:28px;height:28px;border-radius:14px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}
+.tile .cap{padding:10px 12px 12px;display:flex;align-items:center;gap:8px;border-top:3px solid var(--c)}
+.tile .cap b{font-family:var(--f-title);font-size:15px;color:var(--ink)}
+.tile .cap .dot{width:8px;height:8px;border-radius:4px;background:var(--c)}
+
+
+/* 플레이어 모달 */
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(6,15,32,.86)}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:520px;display:flex;flex-direction:column;gap:12px}
+.sheet.vertical{max-width:min(380px,calc((100vh - 140px) * 9 / 16))}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.sheet-top h3{margin:0;font-family:var(--f-title);font-size:18px;font-weight:400;line-height:24px}
+.close{flex:0 0 44px;width:44px;height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000}
+.sheet.vertical .frame{aspect-ratio:9/16}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-link{align-self:center;font-size:13px;color:#C9D3E4}
+.yt-link:hover{color:#fff}
+
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="head">
+    <img class="logo" src="images/kmu_logo.png" alt="국민대학교 개교 80주년">
+    <p class="eyebrow">국민대학교 논술고사 · 학부모 라운지</p>
+    <h1>대학 미리 보기</h1>
+    <p class="lead">시험이 진행되는 동안, 자녀가 다닐 캠퍼스를 먼저 둘러보세요.</p>
+  </header>
+
+  <!-- 캠퍼스 사계 -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <button type="button" class="hero-media" id="heroPlay" aria-label="캠퍼스 영상 재생">
+      <img id="heroImg" alt="">
+      <span class="badge">추천 영상</span>
+      <span class="play-big" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="#0A2B5E"/></svg>
+      </span>
+    </button>
+    <div class="hero-body">
+      <div class="hero-title">
+        <h2 id="heroTitle">봄·여름·가을·겨울, 국민대 캠퍼스 사계</h2>
+        <p id="heroSub">계절을 골라 캠퍼스 영상을 감상하세요</p>
+      </div>
+      <div class="seasons" role="group" aria-label="계절 선택" id="seasons"></div>
+    </div>
+  </section>
+
+  <!-- 탭 -->
+  <div class="tabs" role="tablist" aria-label="영상 분류" id="tabs"></div>
+  <main class="panel" id="panel" role="tabpanel" tabindex="-1"></main>
+
+</div>
+
+<!-- 플레이어 -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="sheet" id="sheet">
+    <div class="sheet-top">
+      <h3 id="modalTitle"></h3>
+      <button type="button" class="close" id="closeBtn" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="frame" id="frame"></div>
+    <a class="yt-link" id="ytLink" target="_blank" rel="noopener">재생이 안 되면 유튜브에서 보기 ↗</a>
+  </div>
+</div>
+
+<script>
+/* 영상 목록 — 모집요강 순서 */
+const SEASONS = [
+  { key:"spring", label:"봄",   title:"국민대학교의 봄",   url:"https://www.youtube.com/watch?v=qRZSf1XwQ-4", color:"var(--spring)" },
+  { key:"summer", label:"여름", title:"국민대학교의 여름", url:"https://www.youtube.com/watch?v=OyWJszu3Gow", color:"var(--summer)" },
+  { key:"autumn", label:"가을", title:"국민대학교의 가을", url:"https://www.youtube.com/watch?v=FgghI6kbKcE", color:"var(--autumn)" },
+  { key:"winter", label:"겨울", title:"국민대학교의 겨울", url:"https://www.youtube.com/watch?v=J8SoQUpd2nY", color:"var(--winter)" }
+];
+
+const HUMAN = [
+  { t:"한국어문학부",              u:"https://www.youtube.com/shorts/8ZO1wtLzGm0" },
+  { t:"영어영문학부",              u:"https://www.youtube.com/shorts/4GzaDrs0bwE" },
+  { t:"중어중문학과",              u:"https://www.youtube.com/shorts/KXWkKNWBqcE" },
+  { t:"한국역사학과",              u:"https://www.youtube.com/shorts/OkAExuAN7I8" },
+  { t:"행정학과",                  u:"https://www.youtube.com/shorts/GZRoYTlOUUA" },
+  { t:"정치외교학과",              u:"https://www.youtube.com/shorts/W581dZUAitY" },
+  { t:"사회학과",                  u:"https://www.youtube.com/shorts/kIyWR3rHJnk" },
+  { t:"미디어·광고학부 미디어전공",   u:"https://www.youtube.com/shorts/ElU5CvkR9Kc" },
+  { t:"미디어·광고학부 광고홍보학전공", u:"https://www.youtube.com/shorts/wPebI_jn81w" },
+  { t:"러시아·유라시아학과",         u:"https://www.youtube.com/shorts/HOT12_Ar1V4" },
+  { t:"동아시아국제학부",           u:"https://www.youtube.com/shorts/satqONG8pJk", n:"1편" },
+  { t:"동아시아국제학부",           u:"https://www.youtube.com/shorts/Bmvd96iphy4", n:"2편" },
+  { t:"법학부",                    u:"https://www.youtube.com/shorts/7JNe3jipk_s" },
+  { t:"경제학과",                  u:"https://www.youtube.com/shorts/NOKAhZtryuE" },
+  { t:"국제통상금융학과",           u:"https://www.youtube.com/shorts/1usWcYOM8PY" },
+  { t:"경영학부 경영학전공",         u:"https://www.youtube.com/watch?v=Dban8eCAseQ" },
+  { t:"경영정보학부",              u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
+  { t:"AI빅데이터융합경영학과",      u:"https://www.youtube.com/watch?v=G4-QILt2f28" }
+];
+
+const NATURE = [
+  { t:"경영정보학부",              u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
+  { t:"AI빅데이터융합경영학과",      u:"https://www.youtube.com/watch?v=G4-QILt2f28" },
+  { t:"신소재공학부",              u:"https://www.youtube.com/shorts/4zV68rKh2AA" },
+  { t:"기계공학부",                u:"https://www.youtube.com/shorts/JYM0vwcTskA" },
+  { t:"건설시스템공학부",           u:"https://www.youtube.com/shorts/182lhnIQo5k" },
+  { t:"전자공학부",                u:"https://www.youtube.com/shorts/7tum5ao7jM0" },
+  { t:"산림기후환경학과",           u:"https://www.youtube.com/shorts/miGc7uR6CjU" },
+  { t:"바이오소재융합공학과",        u:"https://www.youtube.com/shorts/OHCIGhwn7tg" },
+  { t:"식품영양학과",              u:"https://www.youtube.com/shorts/M5Kuy6Qjo1g" },
+  { t:"정보보안암호수학과",          u:"https://www.youtube.com/shorts/H0xA94r2KNk" },
+  { t:"소프트웨어학부",             u:"https://www.youtube.com/shorts/yetw7UjoS_w" },
+  { t:"인공지능학부",              u:"https://www.youtube.com/shorts/aHAkg-eT5p4" },
+  { t:"건축학부",                  u:"https://www.youtube.com/shorts/Bw5nGTMmp7E" },
+  { t:"자동차모빌리티대학",          u:"https://www.youtube.com/shorts/spOxXiWLpjI" }
+];
+
+const TABS = [
+  { id:"human",  label:"학과 소개(인문)" },
+  { id:"nature", label:"학과 소개(자연)" },
+  { id:"campus", label:"캠퍼스" },
+  { id:"all",    label:"전체" }
+];
+
+/* ── 유틸 ── */
+const $ = s => document.querySelector(s);
+const ytId = url => (url.match(/(?:v=|shorts\/|youtu\.be\/)([\w-]{11})/) || [])[1];
+const isShort = url => url.includes("/shorts/");
+const thumb = (id, hq) => `https://i.ytimg.com/vi/${id}/${hq ? "hqdefault" : "mqdefault"}.jpg`;
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const PLAY_MINI = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="#0A2B5E"/></svg>';
+const TINTS = ["var(--tint-blue)","var(--tint-gold)","var(--tint-green)"];
+
+/* ── 계절 히어로 ── */
+const monthToSeason = m => (m >= 3 && m <= 5) ? 0 : (m >= 6 && m <= 8) ? 1 : (m >= 9 && m <= 11) ? 2 : 3;
+let season = monthToSeason(new Date().getMonth() + 1);
+
+function renderSeasons(){
+  $("#seasons").innerHTML = SEASONS.map((s, i) =>
+    `<button type="button" class="season" style="--c:${s.color}" aria-pressed="${i === season}" data-i="${i}">
+       <span class="dot" aria-hidden="true"></span>${s.label}
+     </button>`).join("");
+  const s = SEASONS[season], id = ytId(s.url);
+  const img = $("#heroImg");
+  img.src = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  img.style.visibility = "";
+  img.onerror = () => { img.onerror = () => { img.style.visibility = "hidden"; }; img.src = thumb(id, true); };
+  $("#heroSub").textContent = `지금 선택: ${s.title}`;
+  $("#heroPlay").setAttribute("aria-label", `${s.title} 영상 재생`);
+}
+$("#seasons").addEventListener("click", e => {
+  const b = e.target.closest(".season"); if (!b) return;
+  season = +b.dataset.i; renderSeasons();
+});
+$("#heroPlay").addEventListener("click", () => openPlayer(SEASONS[season].title, SEASONS[season].url));
+
+/* ── 목록 ── */
+function rows(items){
+  return `<ul class="list">${items.map((v, i) => {
+    const id = ytId(v.u);
+    return `<li><button type="button" class="row" data-t="${esc(v.t)}" data-u="${v.u}">
+      <span class="thumb" style="background:${TINTS[i % 3]}">
+        <img src="${thumb(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <span class="mini">${PLAY_MINI}</span>
+      </span>
+      <span class="meta"><strong>${esc(v.t)}</strong><small>학과 소개 영상${v.n ? " · " + v.n : ""}</small></span>
+    </button></li>`;
+  }).join("")}</ul>`;
+}
+function tiles(){
+  return `<ul class="grid">${SEASONS.map(s => `<li>
+    <button type="button" class="tile" style="--c:${s.color}" data-t="${s.title}" data-u="${s.url}">
+      <span class="ph" style="display:block"><img src="${thumb(ytId(s.url), true)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span class="mini">${PLAY_MINI}</span></span>
+      <span class="cap"><span class="dot" aria-hidden="true"></span><b>${s.label}</b></span>
+    </button></li>`).join("")}</ul>`;
+}
+
+let tab = "human";
+function renderTabs(){
+  $("#tabs").innerHTML = TABS.map(t =>
+    `<button type="button" role="tab" class="tab" id="tab-${t.id}" aria-selected="${t.id === tab}" tabindex="${t.id === tab ? 0 : -1}" data-id="${t.id}">${t.label}</button>`
+  ).join("");
+  $("#panel").setAttribute("aria-labelledby", "tab-" + tab);
+}
+function renderPanel(){
+  let html = "";
+  if (tab === "human")  html = `<p class="count">인문계열 <b>${HUMAN.length}</b>편</p>` + rows(HUMAN);
+  if (tab === "nature") html = `<p class="count">자연계열 <b>${NATURE.length}</b>편</p>` + rows(NATURE);
+  if (tab === "campus") html = `<p class="count">캠퍼스 사계 <b>${SEASONS.length}</b>편</p>` + tiles();
+  if (tab === "all") html =
+      `<h2 class="section-h">캠퍼스 <span>${SEASONS.length}편</span></h2>${tiles()}`
+    + `<h2 class="section-h">학과 소개(인문) <span>${HUMAN.length}편</span></h2>${rows(HUMAN)}`
+    + `<h2 class="section-h">학과 소개(자연) <span>${NATURE.length}편</span></h2>${rows(NATURE)}`;
+  $("#panel").innerHTML = html;
+}
+function selectTab(id, focus){
+  tab = id; renderTabs(); renderPanel();
+  if (focus) $("#tab-" + id).focus();
+  const top = $("#tabs").offsetTop;
+  if (window.scrollY > top) window.scrollTo({ top, behavior:"smooth" });
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) selectTab(b.dataset.id); });
+$("#tabs").addEventListener("keydown", e => {
+  const i = TABS.findIndex(t => t.id === tab);
+  if (e.key === "ArrowRight") selectTab(TABS[(i + 1) % TABS.length].id, true);
+  if (e.key === "ArrowLeft")  selectTab(TABS[(i + TABS.length - 1) % TABS.length].id, true);
+});
+$("#panel").addEventListener("click", e => {
+  const b = e.target.closest("[data-u]"); if (b) openPlayer(b.dataset.t, b.dataset.u);
+});
+
+/* ── 플레이어 ── */
+let lastFocus = null;
+function openPlayer(title, url){
+  /* PC에서 파일로 직접 열면 유튜브가 퍼가기 재생을 막으므로(Error 153) 유튜브로 바로 연결 */
+  if (location.protocol === "file:") { window.open(url, "_blank", "noopener"); return; }
+  const id = ytId(url); lastFocus = document.activeElement;
+  $("#modalTitle").textContent = title;
+  $("#sheet").classList.toggle("vertical", isShort(url));
+  $("#frame").innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" referrerpolicy="strict-origin-when-cross-origin"
+    title="${esc(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  $("#ytLink").href = url;
+  $("#modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("#closeBtn").focus();
+}
+function closePlayer(){
+  $("#modal").classList.remove("open");
+  $("#frame").innerHTML = "";
+  document.body.style.overflow = "";
+  if (lastFocus) lastFocus.focus();
+}
+$("#closeBtn").addEventListener("click", closePlayer);
+$("#modal").addEventListener("click", e => { if (e.target.id === "modal") closePlayer(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#modal").classList.contains("open")) closePlayer(); });
+
+
+renderSeasons(); renderTabs(); renderPanel();
+</script>
+</body>
+</html>
