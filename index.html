@@ -96,8 +96,12 @@ a{color:var(--navy)} a:hover{color:var(--navy-deep)}
 .meta{display:flex;flex-direction:column;gap:3px;min-width:0}
 .meta strong{font-size:15px;font-weight:700;color:var(--ink);line-height:21px}
 .meta small{font-size:13px;color:var(--ink-3)}
+.row.soon{cursor:default}
+.row.soon .thumb{display:flex;align-items:center;justify-content:center;background:#EEF1F6;border:1px dashed var(--line-strong)}
+.row.soon strong{color:var(--ink-2)}
 .meta mark{background:var(--tint-gold);color:inherit;border-radius:3px;padding:0 1px}
 .empty{margin:28px 0;padding:24px 16px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;color:var(--ink-3);font-size:14px;line-height:21px}
+.soon-note{display:block;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;line-height:20px;color:var(--ink-3)}
 .empty b{display:block;margin-bottom:4px;font-family:var(--f-title);font-size:17px;font-weight:400;color:var(--ink)}
 
 /* 캠퍼스 2x2 */
@@ -197,8 +201,9 @@ a{color:var(--navy)} a:hover{color:var(--navy-deep)}
 </div>
 
 <script>
-/* 영상 목록 — 모집요강 순서
-   t: 화면에 보이는 학과명 / k: 검색용 추가 키워드(화면에는 안 보임) */
+/* 영상 목록 — 2027학년도 수시 논술 모집단위 순서
+   t: 화면에 보이는 학과명 / c: 소속 대학 / k: 검색용 추가 키워드(화면에는 안 보임)
+   u가 없는 줄 = "영상을 준비하고 있어요"로 표시. 영상이 생기면 u:"유튜브 주소"만 추가하면 됩니다. */
 const SEASONS = [
   { key:"spring", label:"봄",   title:"국민대학교의 봄",   url:"https://www.youtube.com/watch?v=qRZSf1XwQ-4", color:"var(--spring)" },
   { key:"summer", label:"여름", title:"국민대학교의 여름", url:"https://www.youtube.com/watch?v=OyWJszu3Gow", color:"var(--summer)" },
@@ -207,41 +212,43 @@ const SEASONS = [
 ];
 
 const HUMAN = [
-  { t:"한국어문학부",              u:"https://www.youtube.com/shorts/8ZO1wtLzGm0", k:"국어국문학전공 글로벌한국어전공" },
-  { t:"영어영문학부",              u:"https://www.youtube.com/shorts/4GzaDrs0bwE" },
-  { t:"중어중문학과",              u:"https://www.youtube.com/shorts/KXWkKNWBqcE", k:"중국어문전공" },
-  { t:"한국역사학과",              u:"https://www.youtube.com/shorts/OkAExuAN7I8" },
-  { t:"행정학과",                  u:"https://www.youtube.com/shorts/GZRoYTlOUUA" },
-  { t:"정치외교학과",              u:"https://www.youtube.com/shorts/W581dZUAitY" },
-  { t:"사회학과",                  u:"https://www.youtube.com/shorts/kIyWR3rHJnk" },
-  { t:"미디어·광고학부 미디어전공",   u:"https://www.youtube.com/shorts/ElU5CvkR9Kc" },
-  { t:"미디어·광고학부 광고홍보학전공", u:"https://www.youtube.com/shorts/wPebI_jn81w" },
-  { t:"러시아·유라시아학과",         u:"https://www.youtube.com/shorts/HOT12_Ar1V4" },
-  { t:"동아시아국제학부",           u:"https://www.youtube.com/shorts/satqONG8pJk", n:"1편", k:"중국정경전공" },
-  { t:"동아시아국제학부",           u:"https://www.youtube.com/shorts/Bmvd96iphy4", n:"2편", k:"일본학과" },
-  { t:"법학부",                    u:"https://www.youtube.com/shorts/7JNe3jipk_s" },
-  { t:"경제학과",                  u:"https://www.youtube.com/shorts/NOKAhZtryuE" },
-  { t:"국제통상금융학과",           u:"https://www.youtube.com/shorts/1usWcYOM8PY", k:"국제통상학과" },
-  { t:"경영학부 경영학전공",         u:"https://www.youtube.com/watch?v=Dban8eCAseQ", k:"경영학과" },
-  { t:"경영정보학부",              u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
-  { t:"AI빅데이터융합경영학과",      u:"https://www.youtube.com/watch?v=G4-QILt2f28" }
+  { t:"한국어문학부",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/8ZO1wtLzGm0", k:"국어국문학전공" },
+  { t:"중어중문학과",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/KXWkKNWBqcE", k:"중국어문전공" },
+  { t:"한국역사학과",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/OkAExuAN7I8" },
+  { t:"행정학과",                  c:"사회과학대학", u:"https://www.youtube.com/shorts/GZRoYTlOUUA" },
+  { t:"정치외교학과",              c:"사회과학대학", u:"https://www.youtube.com/shorts/W581dZUAitY" },
+  { t:"사회학과",                  c:"사회과학대학", u:"https://www.youtube.com/shorts/kIyWR3rHJnk" },
+  { t:"미디어·광고학부 미디어전공",   c:"사회과학대학", u:"https://www.youtube.com/shorts/ElU5CvkR9Kc" },
+  { t:"교육학과",                  c:"사회과학대학" },
+  { t:"러시아·유라시아학과",         c:"사회과학대학", u:"https://www.youtube.com/shorts/HOT12_Ar1V4" },
+  { t:"동아시아국제학부",           c:"사회과학대학", u:"https://www.youtube.com/shorts/satqONG8pJk", n:"1편", k:"중국정경전공" },
+  { t:"동아시아국제학부",           c:"사회과학대학", u:"https://www.youtube.com/shorts/Bmvd96iphy4", n:"2편", k:"일본학과" },
+  { t:"법학부",                    c:"법과대학", u:"https://www.youtube.com/shorts/7JNe3jipk_s" },
+  { t:"경제학과",                  c:"경상대학", u:"https://www.youtube.com/shorts/NOKAhZtryuE" },
+  { t:"경영학부 경영학전공",         c:"경영대학", u:"https://www.youtube.com/watch?v=Dban8eCAseQ", k:"경영학과" }
 ];
 
 const NATURE = [
-  { t:"경영정보학부",              u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
-  { t:"AI빅데이터융합경영학과",      u:"https://www.youtube.com/watch?v=G4-QILt2f28" },
-  { t:"신소재공학부",              u:"https://www.youtube.com/shorts/4zV68rKh2AA", k:"에너지·모빌리티재료전공 전자화학재료전공" },
-  { t:"기계공학부",                u:"https://www.youtube.com/shorts/JYM0vwcTskA" },
-  { t:"건설시스템공학부",           u:"https://www.youtube.com/shorts/182lhnIQo5k" },
-  { t:"전자공학부",                u:"https://www.youtube.com/shorts/7tum5ao7jM0", k:"지능형반도체융합전자 지능형ICT융합 모빌리티전력전자융합전공" },
-  { t:"산림기후환경학과",           u:"https://www.youtube.com/shorts/miGc7uR6CjU", k:"산림환경시스템학과" },
-  { t:"바이오소재융합공학과",        u:"https://www.youtube.com/shorts/OHCIGhwn7tg", k:"임산생명공학과" },
-  { t:"식품영양학과",              u:"https://www.youtube.com/shorts/M5Kuy6Qjo1g" },
-  { t:"정보보안암호수학과",          u:"https://www.youtube.com/shorts/H0xA94r2KNk" },
-  { t:"소프트웨어학부",             u:"https://www.youtube.com/shorts/yetw7UjoS_w" },
-  { t:"인공지능학부",              u:"https://www.youtube.com/shorts/aHAkg-eT5p4" },
-  { t:"건축학부",                  u:"https://www.youtube.com/shorts/Bw5nGTMmp7E" },
-  { t:"자동차모빌리티대학",          u:"https://www.youtube.com/shorts/spOxXiWLpjI", k:"자동차융합대학" }
+  { t:"경영정보학부",              c:"경영대학", u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
+  { t:"AI빅데이터융합경영학과",      c:"경영대학", u:"https://www.youtube.com/watch?v=G4-QILt2f28" },
+  { t:"신소재공학부",              c:"공과대학", u:"https://www.youtube.com/shorts/4zV68rKh2AA", k:"에너지·모빌리티재료전공 전자화학재료전공" },
+  { t:"기계공학부",                c:"공과대학", u:"https://www.youtube.com/shorts/JYM0vwcTskA" },
+  { t:"건설시스템공학부",           c:"공과대학", u:"https://www.youtube.com/shorts/182lhnIQo5k" },
+  { t:"전자공학부",                c:"공과대학", u:"https://www.youtube.com/shorts/7tum5ao7jM0", k:"지능형반도체융합전자전공 지능형ICT융합전공 모빌리티전력전자융합전공" },
+  { t:"산림기후환경학과",           c:"바이오융합대학", u:"https://www.youtube.com/shorts/miGc7uR6CjU", k:"산림환경시스템학과" },
+  { t:"바이오소재융합공학과",        c:"바이오융합대학", u:"https://www.youtube.com/shorts/OHCIGhwn7tg", k:"임산생명공학과" },
+  { t:"바이오의과학과",             c:"바이오융합대학" },
+  { t:"식품영양학과",              c:"바이오융합대학", u:"https://www.youtube.com/shorts/M5Kuy6Qjo1g" },
+  { t:"융합바이오공학과",           c:"바이오융합대학" },
+  { t:"제약공학과",                c:"바이오융합대학" },
+  { t:"양자융합공학과",             c:"양자융합대학" },
+  { t:"정보보안암호수학과",          c:"양자융합대학", u:"https://www.youtube.com/shorts/H0xA94r2KNk" },
+  { t:"에너지반도체화학공학과",       c:"양자융합대학" },
+  { t:"소프트웨어학부",             c:"소프트웨어융합대학", u:"https://www.youtube.com/shorts/yetw7UjoS_w" },
+  { t:"인공지능학부",              c:"소프트웨어융합대학", u:"https://www.youtube.com/shorts/aHAkg-eT5p4" },
+  { t:"건축학부",                  c:"건축대학", u:"https://www.youtube.com/shorts/Bw5nGTMmp7E" },
+  { t:"자동차모빌리티대학",          c:"자동차모빌리티대학", u:"https://www.youtube.com/shorts/spOxXiWLpjI", k:"자동차융합대학" },
+  { t:"미래모빌리티학과",           c:"자동차모빌리티대학" }
 ];
 
 const TABS = [
@@ -254,7 +261,7 @@ const TABS = [
 /* 검색용: 인문·자연 합치고 같은 영상은 하나로 */
 const DEPTS = [];
 [[HUMAN,"인문"],[NATURE,"자연"]].forEach(([list, g]) => list.forEach(v => {
-  const hit = DEPTS.find(d => d.u === v.u);
+  const hit = DEPTS.find(d => v.u ? d.u === v.u : (!d.u && d.t === v.t));
   if (hit) { if (!hit.g.includes(g)) hit.g.push(g); }
   else DEPTS.push({ ...v, g:[g] });
 }));
@@ -303,20 +310,30 @@ $("#seasons").addEventListener("click", e => {
 $("#heroPlay").addEventListener("click", () => openPlayer(SEASONS[season].title, SEASONS[season].url));
 
 /* ── 목록 ── */
+const CLOCK = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7A8496" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>';
+const count = list => {
+  const v = list.filter(x => x.u).length, r = list.length - v;
+  return [v ? `영상 <b>${v}</b>편` : "", r ? `준비 중 ${r}개` : ""].filter(Boolean).join(" · ");
+};
 function rows(items, q){
   return `<ul class="list">${items.map((v, i) => {
-    const id = ytId(v.u);
-    let sub = (q && v.g ? v.g.join("·") + " · " : "") + "학과 소개 영상" + (v.n ? " · " + v.n : "");
+    const title = q ? highlight(v.t, q) : esc(v.t);
+    let tag = q && v.g ? v.g.join("·") + " · " : "";
     if (q && !norm(v.t).includes(norm(q)) && v.k) {
       const kw = v.k.split(" ").find(w => norm(w).includes(norm(q)));
-      if (kw) sub = `${highlight(kw, q)} 포함 · ` + sub;
+      if (kw) tag = `${highlight(kw, q)} 포함 · ` + tag;
     }
+    if (!v.u) return `<li><div class="row soon">
+      <span class="thumb">${CLOCK}</span>
+      <span class="meta"><strong>${title}</strong><small>${tag}영상을 준비하고 있어요</small></span>
+    </div></li>`;
+    const id = ytId(v.u);
     return `<li><button type="button" class="row" data-t="${esc(v.t)}" data-u="${v.u}">
       <span class="thumb" style="background:${TINTS[i % 3]}">
         <img src="${thumb(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
         <span class="mini">${PLAY_MINI}</span>
       </span>
-      <span class="meta"><strong>${q ? highlight(v.t, q) : esc(v.t)}</strong><small>${sub}</small></span>
+      <span class="meta"><strong>${title}</strong><small>${tag}학과 소개 영상${v.n ? " · " + v.n : ""}</small></span>
     </button></li>`;
   }).join("")}</ul>`;
 }
@@ -341,17 +358,28 @@ function renderPanel(){
   if (query){
     const nq = norm(query);
     const found = DEPTS.filter(d => norm(d.t + (d.k || "")).includes(nq));
-    html = found.length
-      ? `<p class="count">'${esc(query)}' 검색 결과 <b>${found.length}</b>편</p>` + rows(found, query)
-      : `<div class="empty"><b>찾는 학과가 없어요</b>학과명의 일부만 입력해 보세요. (예: 경영, 공학, 미디어)</div>`;
+    if (!found.length) {
+      const soon = DEPTS.filter(d => !d.u).map(d => esc(d.t)).join(", ");
+      html = `<div class="empty"><b>찾는 학과가 없어요</b>학과명의 일부만 입력해 보세요. (예: 경영, 공학, 미디어)
+        <span class="soon-note">아래 학과는 영상을 준비하고 있어요<br>${soon}</span></div>`;
+    }
+    else {
+      html = `<p class="count">'${esc(query)}' 검색 결과 · ${count(found)}</p>` + rows(found, query);
+      /* 준비 중인 학과가 있으면 같은 대학의 다른 영상 추천 */
+      const colleges = [...new Set(found.filter(d => !d.u).map(d => d.c))];
+      colleges.forEach(c => {
+        const more = DEPTS.filter(d => d.c === c && d.u && !found.includes(d));
+        if (more.length) html += `<h2 class="section-h">같은 ${esc(c)} 영상 <span>${more.length}편</span></h2>` + rows(more);
+      });
+    }
   }
-  else if (tab === "human")  html = `<p class="count">인문계열 <b>${HUMAN.length}</b>편</p>` + rows(HUMAN);
-  else if (tab === "nature") html = `<p class="count">자연계열 <b>${NATURE.length}</b>편</p>` + rows(NATURE);
+  else if (tab === "human")  html = `<p class="count">인문계열 ${count(HUMAN)}</p>` + rows(HUMAN);
+  else if (tab === "nature") html = `<p class="count">자연계열 ${count(NATURE)}</p>` + rows(NATURE);
   else if (tab === "campus") html = `<p class="count">캠퍼스 사계 <b>${SEASONS.length}</b>편</p>` + tiles();
   else html =
       `<h2 class="section-h">캠퍼스 <span>${SEASONS.length}편</span></h2>${tiles()}`
-    + `<h2 class="section-h">학과 소개(인문) <span>${HUMAN.length}편</span></h2>${rows(HUMAN)}`
-    + `<h2 class="section-h">학과 소개(자연) <span>${NATURE.length}편</span></h2>${rows(NATURE)}`;
+    + `<h2 class="section-h">학과 소개(인문) <span>${count(HUMAN).replace(/<\/?b>/g, "")}</span></h2>${rows(HUMAN)}`
+    + `<h2 class="section-h">학과 소개(자연) <span>${count(NATURE).replace(/<\/?b>/g, "")}</span></h2>${rows(NATURE)}`;
   $("#panel").innerHTML = html;
 }
 const filterTop = () => $("#filter").getBoundingClientRect().top + window.scrollY;
