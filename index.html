@@ -3,125 +3,440 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>대학 미리 보기 | 국민대학교 논술고사 학부모 라운지</title>
+<meta name="description" content="시험이 진행되는 동안, 자녀가 다닐 캠퍼스를 먼저 둘러보세요.">
 <meta name="theme-color" content="#0A2B5E">
-<title>퀴즈 룰렛 | 국민대학교 학부모 라운지</title>
-<link rel="preload" href="fonts/KMU80-HaeongSans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/KMU80-SungkokSemiSerif.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* KMU 80주년 서체 — 본문: 해옹 산스 / 제목: 성곡 세미세리프 */
+@font-face{
+  font-family:"KMU80 Haeong";
+  src:url("fonts/KMU80_Haeong_Sans.woff2") format("woff2");
+  font-weight:100 900; font-display:swap;
+}
+@font-face{
+  font-family:"KMU80 Sungkok";
+  src:url("fonts/KMU80_Sungkok_SemiSerif.woff2") format("woff2");
+  font-weight:100 900; font-display:swap;
+}
+
+:root{
+  --navy:#0A2B5E; --navy-deep:#061B3D; --gold:#F2B233;
+  --bg:#F5F7FB; --card:#FFFFFF; --line:#E2E7EF; --line-strong:#D3DAE6;
+  --ink:#1A1F2B; --ink-2:#3B4456; --ink-3:#5A6476;
+  --tint-blue:#DCE5F3; --tint-gold:#FCEBC4; --tint-green:#E3EADF; --tint-sel:#EEF3FB;
+  --spring:#E8829B; --summer:#2E9A5E; --autumn:#D9692A; --winter:#5B8FCF;
+  --f-title:"KMU80 Sungkok","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"KMU80 Haeong","Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-synthesis:none;background:#E9EDF4;color:var(--ink);font-family:var(--f-body);-webkit-font-smoothing:antialiased;word-break:keep-all}
+button,input{font-family:inherit}
+a{color:var(--navy)} a:hover{color:var(--navy-deep)}
+
+.app{position:relative;max-width:560px;min-height:100vh;margin:0 auto;background:var(--bg);padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+
+/* 헤더 */
+.head{padding:24px 20px 0;display:flex;flex-direction:column;gap:6px}
+.eyebrow{margin:0;font-size:13px;font-weight:500;color:var(--ink-3)}
+.head h1{margin:0;font-family:var(--f-title);font-size:30px;font-weight:400;color:var(--navy);letter-spacing:-.5px}
+.lead{margin:0;font-size:15px;line-height:22px;color:var(--ink-2)}
+
+/* 캠퍼스 사계 히어로 */
+.hero{margin:18px 20px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.hero-media{position:relative;display:block;width:100%;aspect-ratio:16/9;border:0;padding:0;background:var(--navy);cursor:pointer;overflow:hidden}
+.hero-media img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(6,27,61,.35),rgba(6,27,61,0) 55%)}
+.play-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:64px;height:64px;border-radius:32px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(6,27,61,.25)}
+.badge{position:absolute;left:14px;top:14px;z-index:1;padding:4px 10px;border-radius:999px;background:var(--gold);color:var(--navy);font-size:12px;font-weight:700}
+.hero-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.hero-title{display:flex;flex-direction:column;gap:4px}
+.hero-title h2{margin:0;font-family:var(--f-title);font-size:18px;font-weight:400;color:var(--ink)}
+.hero-title p{margin:0;font-size:13px;color:var(--ink-3)}
+.seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px;background:var(--bg);border-radius:12px}
+.season{height:44px;border:0;border-radius:9px;background:transparent;color:var(--ink-3);font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.season .dot{width:8px;height:8px;border-radius:4px;background:var(--c)}
+.season[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(10,43,94,.12),inset 0 -3px 0 var(--c)}
+
+/* 검색 + 탭 (스크롤 시 상단 고정) */
+.filter{position:sticky;top:0;z-index:5;margin-top:18px;padding:10px 0 0;background:rgba(245,247,251,.97);backdrop-filter:blur(6px)}
+.search{position:relative;margin:0 20px}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none}
+.search input{width:100%;height:48px;padding:0 48px 0 44px;border:1px solid var(--line-strong);border-radius:12px;background:#fff;color:var(--ink);font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
+.search input::placeholder{color:#7A8496}
+.search input::-webkit-search-cancel-button{display:none}
+.search input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(10,43,94,.12)}
+.clear{position:absolute;right:2px;top:2px;width:44px;height:44px;border:0;border-radius:10px;background:transparent;color:var(--ink-3);display:none;align-items:center;justify-content:center;cursor:pointer}
+.clear.show{display:flex}
+.clear:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tabs{padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs.dim .tab{opacity:.55}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;height:38px;padding:0 10px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;color:var(--ink-2);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{border-color:var(--navy);background:var(--navy);color:#fff;font-weight:700}
+.tab:focus-visible,.season:focus-visible,.row:focus-visible,.tile:focus-visible,.hero-media:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* 목록 */
+.panel{padding:4px 20px 0}
+.count{margin:6px 0 10px;font-size:13px;color:var(--ink-3)}
+.count b{color:var(--navy)}
+.section-h{margin:22px 0 10px;display:flex;align-items:baseline;gap:8px;font-family:var(--f-title);font-size:19px;font-weight:400;color:var(--navy)}
+.section-h:first-child{margin-top:8px}
+.section-h span{font-family:var(--f-body);font-size:13px;font-weight:500;color:var(--ink-3)}
+.list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.row{width:100%;display:flex;gap:14px;align-items:center;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;border-radius:10px}
+.thumb{position:relative;flex:0 0 120px;height:68px;border-radius:10px;overflow:hidden;background:var(--tint-blue)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .mini{position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:12px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}
+.meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.meta strong{font-size:15px;font-weight:700;color:var(--ink);line-height:21px}
+.meta small{font-size:13px;color:var(--ink-3)}
+.row.soon{cursor:default}
+.row.soon .thumb{display:flex;align-items:center;justify-content:center;background:#EEF1F6;border:1px dashed var(--line-strong)}
+.row.soon strong{color:var(--ink-2)}
+.meta mark{background:var(--tint-gold);color:inherit;border-radius:3px;padding:0 1px}
+.empty{margin:28px 0;padding:24px 16px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;color:var(--ink-3);font-size:14px;line-height:21px}
+.soon-note{display:block;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;line-height:20px;color:var(--ink-3)}
+.empty b{display:block;margin-bottom:4px;font-family:var(--f-title);font-size:17px;font-weight:400;color:var(--ink)}
+
+/* 캠퍼스 2x2 */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;padding:0;list-style:none}
+.tile{width:100%;padding:0;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;text-align:left;cursor:pointer}
+.tile .ph{position:relative;aspect-ratio:16/10;background:var(--navy)}
+.tile .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .ph .mini{position:absolute;right:8px;bottom:8px;width:28px;height:28px;border-radius:14px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}
+.tile .cap{padding:10px 12px 12px;display:flex;align-items:center;gap:8px;border-top:3px solid var(--c)}
+.tile .cap b{font-family:var(--f-title);font-size:15px;color:var(--ink)}
+.tile .cap .dot{width:8px;height:8px;border-radius:4px;background:var(--c)}
+
+
+
+/* 플레이어 모달 */
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(6,15,32,.86)}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:520px;display:flex;flex-direction:column;gap:12px}
+.sheet.vertical{max-width:min(380px,calc((100vh - 140px) * 9 / 16))}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.sheet-top h3{margin:0;font-family:var(--f-title);font-size:18px;font-weight:400;line-height:24px}
+.close{flex:0 0 44px;width:44px;height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000}
+.sheet.vertical .frame{aspect-ratio:9/16}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.local{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;color:#C9D3E4;font-size:14px;line-height:21px}
+.local a{display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:12px;background:#fff;color:var(--navy);text-decoration:none;font-size:15px}
+.yt-link{align-self:center;font-size:13px;color:#C9D3E4}
+.yt-link:hover{color:#fff}
+
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-<main class="app">
+<div class="app">
 
-  <header class="top">
-    <p class="eyebrow" id="eyebrow"></p>
-    <h1 id="pageTitle"></h1>
-    <p class="lead" id="pageLead"></p>
+  <header class="head">
+    <p class="eyebrow">국민대학교 논술고사 · 학부모 라운지</p>
+    <h1>대학 미리 보기</h1>
+    <p class="lead">시험이 진행되는 동안, 자녀가 다닐 캠퍼스를 먼저 둘러보세요.</p>
   </header>
 
-  <!-- 1. 시작: 휴대전화 번호 + 동의 -->
-  <section class="screen" id="screen-start">
-    <div class="banner">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8C10.5 5 7 4.5 7 7s3 1 5 1zM12 8c1.5-3 5-3.5 5-1s-3 1-5 1z"/></svg>
-      <p id="bannerText"></p>
-    </div>
-
-    <form class="card" id="startForm" novalidate>
-      <label class="field-label" for="phone">휴대전화 번호</label>
-      <input class="input" id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="010-0000-0000" maxlength="13" required>
-      <p class="hint" id="phoneHint">경품은 번호 1개당 1개만 받을 수 있어요.</p>
-
-      <details class="consent" id="consentBox">
-        <summary id="consentTitle"></summary>
-        <dl id="consentRows"></dl>
-      </details>
-      <label class="check-line">
-        <input type="checkbox" id="agree">
-        <span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
-        <span>개인정보 수집·이용에 동의합니다.</span>
-      </label>
-
-      <p class="error" id="startError" role="alert"></p>
-      <button class="btn btn-primary" type="submit" id="startBtn">퀴즈 시작하기</button>
-    </form>
-    
-        <!-- 학교 로고 (첫 화면 전용, 버튼과 같은 너비) -->
-    <div style="padding:12px 19px 0">
-      <img src="logo.png" alt="국민대학교" style="display:block;width:100%;height:auto" onerror="this.parentNode.style.display='none'">
+  <!-- 캠퍼스 사계 -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <button type="button" class="hero-media" id="heroPlay" aria-label="캠퍼스 영상 재생">
+      <img id="heroImg" alt="">
+      <span class="badge">추천 영상</span>
+      <span class="play-big" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="#0A2B5E"/></svg>
+      </span>
+    </button>
+    <div class="hero-body">
+      <div class="hero-title">
+        <h2 id="heroTitle">봄·여름·가을·겨울, 국민대 캠퍼스 사계</h2>
+        <p id="heroSub">계절을 골라 캠퍼스 영상을 감상하세요</p>
+      </div>
+      <div class="seasons" role="group" aria-label="계절 선택" id="seasons"></div>
     </div>
   </section>
 
-  <!-- 2. 퀴즈 -->
-  <section class="screen" id="screen-quiz" hidden>
-    <div class="progress-wrap">
-      <div class="progress-meta"><span id="qCount">1 / 3</span><span id="qCategory"></span></div>
-      <div class="progress"><div class="progress-bar" id="qBar"></div></div>
+  <!-- 검색 + 탭 -->
+  <div class="filter" id="filter">
+    <div class="search" role="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6476" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="search" id="q" placeholder="학과명으로 검색 (예: 경영, 기계)" aria-label="학과명 검색" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="clear" id="clearQ" aria-label="검색어 지우기">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
+    <div class="tabs" role="tablist" aria-label="영상 분류" id="tabs"></div>
+  </div>
+  <main class="panel" id="panel" role="tabpanel" tabindex="-1" aria-live="polite"></main>
 
-    <form class="card" id="quizForm">
-      <fieldset>
-        <legend class="q-title"><span class="q-no" id="qNo">Q1.</span> <span id="qText"></span></legend>
-        <p class="hint">맞는 보기를 모두 체크해 주세요 (중복 선택 가능)</p>
-        <div class="options" id="qOptions"></div>
-      </fieldset>
-      <div class="feedback" id="qFeedback" aria-live="polite" hidden></div>
-      <button class="btn btn-primary" type="submit" id="qSubmit" disabled>정답 확인</button>
-      <button class="btn btn-primary" type="button" id="qNext" hidden>다음 문제</button>
-    </form>
-  </section>
+</div>
 
-  <!-- 3. 룰렛 -->
-  <section class="screen" id="screen-roulette" hidden>
-    <div class="wheel-wrap">
-      <svg class="pointer" width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><path d="M3 2h28L17 28z" fill="#F2B233" stroke="#0A2B5E" stroke-width="3" stroke-linejoin="round"/></svg>
-      <div class="wheel" id="wheel"></div>
+
+<!-- 플레이어 -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="sheet" id="sheet">
+    <div class="sheet-top">
+      <h3 id="modalTitle"></h3>
+      <button type="button" class="close" id="closeBtn" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
-    <button class="btn btn-gold" type="button" id="spinBtn">룰렛 돌리기</button>
-    <p class="notice" id="soldOut1"></p>
-    <ul class="notes" id="rouletteNotes"></ul>
-  </section>
+    <div class="frame" id="frame"></div>
+    <a class="yt-link" id="ytLink" target="_blank" rel="noopener">재생이 안 되면 유튜브에서 보기 ↗</a>
+  </div>
+</div>
 
-  <!-- 4. 결과 -->
-  <section class="screen" id="screen-result" hidden>
-    <div class="card result">
-      <p class="result-kicker">축하드려요! 당첨 경품</p>
-      <p class="result-prize" id="rPrize"></p>
-      <dl class="result-meta">
-        <div><dt>당첨 코드</dt><dd id="rCode"></dd></div>
-        <div><dt>휴대전화</dt><dd id="rPhone"></dd></div>
-        <div><dt>당첨 시각</dt><dd id="rTime"></dd></div>
-      </dl>
-      <p class="live-clock" aria-hidden="true">현재 <span id="rClock"></span></p>
-      <p class="result-guide">이 화면을 <strong>안내 데스크</strong>에 보여주세요.</p>
-      <p class="warn" id="rWarn" hidden></p>
-    </div>
-    <p class="notice" id="soldOut2"></p>
-    <p class="retry-note" id="rRetryNote"></p>
-    <button class="btn btn-primary" type="button" id="retryBtn">다시 도전하기</button>
-    <button class="btn btn-ghost" type="button" id="homeBtn">처음으로</button>
-  </section>
+<script>
+/* 영상 목록 — 2027학년도 수시 논술 모집단위 순서
+   t: 화면에 보이는 학과명 / c: 소속 대학 / k: 검색용 추가 키워드(화면에는 안 보임)
+   u가 없는 줄 = "영상을 준비하고 있어요"로 표시. 영상이 생기면 u:"유튜브 주소"만 추가하면 됩니다. */
+const SEASONS = [
+  { key:"spring", label:"봄",   title:"국민대학교의 봄",   url:"https://www.youtube.com/watch?v=qRZSf1XwQ-4", color:"var(--spring)" },
+  { key:"summer", label:"여름", title:"국민대학교의 여름", url:"https://www.youtube.com/watch?v=OyWJszu3Gow", color:"var(--summer)" },
+  { key:"autumn", label:"가을", title:"국민대학교의 가을", url:"https://www.youtube.com/watch?v=FgghI6kbKcE", color:"var(--autumn)" },
+  { key:"winter", label:"겨울", title:"국민대학교의 겨울", url:"https://www.youtube.com/watch?v=J8SoQUpd2nY", color:"var(--winter)" }
+];
 
-  <!-- 5. 이미 참여 -->
-  <section class="screen" id="screen-already" hidden>
-    <div class="card result">
-      <p class="result-kicker">참여 기록이 있는 번호예요 · 최근 결과</p>
-      <p class="result-prize" id="aPrize"></p>
-      <dl class="result-meta">
-        <div><dt>당첨 코드</dt><dd id="aCode"></dd></div>
-        <div><dt>휴대전화</dt><dd id="aPhone"></dd></div>
-        <div><dt>당첨 시각</dt><dd id="aTime"></dd></div>
-      </dl>
-      <p class="result-guide" id="aGuide"></p>
-    </div>
-    <button class="btn btn-primary" type="button" id="aRetryBtn">다시 도전하기</button>
-    <button class="btn btn-ghost" type="button" id="backBtn">처음으로</button>
-  </section>
+const HUMAN = [
+  { t:"한국어문학부",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/8ZO1wtLzGm0", k:"국어국문학전공" },
+  { t:"중어중문학과",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/KXWkKNWBqcE", k:"중국어문전공" },
+  { t:"한국역사학과",              c:"글로벌인문·지역대학", u:"https://www.youtube.com/shorts/OkAExuAN7I8" },
+  { t:"행정학과",                  c:"사회과학대학", u:"https://www.youtube.com/shorts/GZRoYTlOUUA" },
+  { t:"정치외교학과",              c:"사회과학대학", u:"https://www.youtube.com/shorts/W581dZUAitY" },
+  { t:"사회학과",                  c:"사회과학대학", u:"https://www.youtube.com/shorts/kIyWR3rHJnk" },
+  { t:"미디어·광고학부 미디어전공",   c:"사회과학대학", u:"https://www.youtube.com/shorts/ElU5CvkR9Kc" },
+  { t:"교육학과",                  c:"사회과학대학" },
+  { t:"러시아·유라시아학과",         c:"사회과학대학", u:"https://www.youtube.com/shorts/HOT12_Ar1V4" },
+  { t:"동아시아국제학부",           c:"사회과학대학", u:"https://www.youtube.com/shorts/satqONG8pJk", n:"1편", k:"중국정경전공" },
+  { t:"동아시아국제학부",           c:"사회과학대학", u:"https://www.youtube.com/shorts/Bmvd96iphy4", n:"2편", k:"일본학과" },
+  { t:"법학부",                    c:"법과대학", u:"https://www.youtube.com/shorts/7JNe3jipk_s" },
+  { t:"경제학과",                  c:"경상대학", u:"https://www.youtube.com/shorts/NOKAhZtryuE" },
+  { t:"경영학부 경영학전공",         c:"경영대학", u:"https://www.youtube.com/watch?v=Dban8eCAseQ", k:"경영학과" }
+];
 
-</main>
+const NATURE = [
+  { t:"경영정보학부",              c:"경영대학", u:"https://www.youtube.com/watch?v=fYSxNKPFNtk" },
+  { t:"AI빅데이터융합경영학과",      c:"경영대학", u:"https://www.youtube.com/watch?v=G4-QILt2f28" },
+  { t:"신소재공학부",              c:"공과대학", u:"https://www.youtube.com/shorts/4zV68rKh2AA", k:"에너지·모빌리티재료전공 전자화학재료전공" },
+  { t:"기계공학부",                c:"공과대학", u:"https://www.youtube.com/shorts/JYM0vwcTskA" },
+  { t:"건설시스템공학부",           c:"공과대학", u:"https://www.youtube.com/shorts/182lhnIQo5k" },
+  { t:"전자공학부",                c:"공과대학", u:"https://www.youtube.com/shorts/7tum5ao7jM0", k:"지능형반도체융합전자전공 지능형ICT융합전공 모빌리티전력전자융합전공" },
+  { t:"산림기후환경학과",           c:"바이오융합대학", u:"https://www.youtube.com/shorts/miGc7uR6CjU", k:"산림환경시스템학과" },
+  { t:"바이오소재융합공학과",        c:"바이오융합대학", u:"https://www.youtube.com/shorts/OHCIGhwn7tg", k:"임산생명공학과" },
+  { t:"바이오의과학과",             c:"바이오융합대학" },
+  { t:"식품영양학과",              c:"바이오융합대학", u:"https://www.youtube.com/shorts/M5Kuy6Qjo1g" },
+  { t:"융합바이오공학과",           c:"바이오융합대학" },
+  { t:"제약공학과",                c:"바이오융합대학" },
+  { t:"양자융합공학과",             c:"양자융합대학" },
+  { t:"정보보안암호수학과",          c:"양자융합대학", u:"https://www.youtube.com/shorts/H0xA94r2KNk" },
+  { t:"에너지반도체화학공학과",       c:"양자융합대학" },
+  { t:"소프트웨어학부",             c:"소프트웨어융합대학", u:"https://www.youtube.com/shorts/yetw7UjoS_w" },
+  { t:"인공지능학부",              c:"소프트웨어융합대학", u:"https://www.youtube.com/shorts/aHAkg-eT5p4" },
+  { t:"건축학부",                  c:"건축대학", u:"https://www.youtube.com/shorts/Bw5nGTMmp7E" },
+  { t:"자동차모빌리티대학",          c:"자동차모빌리티대학", u:"https://www.youtube.com/shorts/spOxXiWLpjI", k:"자동차융합대학 미래모빌리티학과" }
+];
 
-<script src="config.js"></script>
-<script src="questions.js"></script>
-<script src="js/app.js"></script>
+const TABS = [
+  { id:"human",  label:"학과 소개(인문)" },
+  { id:"nature", label:"학과 소개(자연)" },
+  { id:"campus", label:"캠퍼스" },
+  { id:"all",    label:"전체" }
+];
+
+/* 검색용: 인문·자연 합치고 같은 영상은 하나로 */
+const DEPTS = [];
+[[HUMAN,"인문"],[NATURE,"자연"]].forEach(([list, g]) => list.forEach(v => {
+  const hit = DEPTS.find(d => v.u ? d.u === v.u : (!d.u && d.t === v.t));
+  if (hit) { if (!hit.g.includes(g)) hit.g.push(g); }
+  else DEPTS.push({ ...v, g:[g] });
+}));
+
+/* ── 유틸 ── */
+const $ = s => document.querySelector(s);
+const ytId = url => (url.match(/(?:v=|shorts\/|youtu\.be\/)([\w-]{11})/) || [])[1];
+const isShort = url => url.includes("/shorts/");
+const thumb = (id, hq) => `https://i.ytimg.com/vi/${id}/${hq ? "hqdefault" : "mqdefault"}.jpg`;
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const PLAY_MINI = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="#0A2B5E"/></svg>';
+const TINTS = ["var(--tint-blue)","var(--tint-gold)","var(--tint-green)"];
+const norm = s => s.replace(/[\s·・()]/g, "").toLowerCase();
+
+/* 검색어 부분 강조 (띄어쓰기·가운뎃점 무시) */
+function highlight(text, q){
+  const nq = norm(q); if (!nq) return esc(text);
+  const map = []; let flat = "";
+  [...text].forEach((ch, i) => { if (!/[\s·・()]/.test(ch)) { map.push(i); flat += ch.toLowerCase(); } });
+  const at = flat.indexOf(nq); if (at < 0) return esc(text);
+  const s = map[at], e = map[at + nq.length - 1] + 1;
+  return esc(text.slice(0, s)) + "<mark>" + esc(text.slice(s, e)) + "</mark>" + esc(text.slice(e));
+}
+
+/* ── 계절 히어로 ── */
+const monthToSeason = m => (m >= 3 && m <= 5) ? 0 : (m >= 6 && m <= 8) ? 1 : (m >= 9 && m <= 11) ? 2 : 3;
+let season = monthToSeason(new Date().getMonth() + 1);
+
+function renderSeasons(){
+  $("#seasons").innerHTML = SEASONS.map((s, i) =>
+    `<button type="button" class="season" style="--c:${s.color}" aria-pressed="${i === season}" data-i="${i}">
+       <span class="dot" aria-hidden="true"></span>${s.label}
+     </button>`).join("");
+  const s = SEASONS[season], id = ytId(s.url);
+  const img = $("#heroImg");
+  img.src = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  img.style.visibility = "";
+  img.onerror = () => { img.onerror = () => { img.style.visibility = "hidden"; }; img.src = thumb(id, true); };
+  $("#heroSub").textContent = `지금 선택: ${s.title}`;
+  $("#heroPlay").setAttribute("aria-label", `${s.title} 영상 재생`);
+}
+$("#seasons").addEventListener("click", e => {
+  const b = e.target.closest(".season"); if (!b) return;
+  season = +b.dataset.i; renderSeasons();
+});
+$("#heroPlay").addEventListener("click", () => openPlayer(SEASONS[season].title, SEASONS[season].url));
+
+/* ── 목록 ── */
+const CLOCK = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7A8496" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>';
+const count = list => {
+  const v = list.filter(x => x.u).length, r = list.length - v;
+  return [v ? `영상 <b>${v}</b>편` : "", r ? `준비 중 ${r}개` : ""].filter(Boolean).join(" · ");
+};
+function rows(items, q){
+  return `<ul class="list">${items.map((v, i) => {
+    const title = q ? highlight(v.t, q) : esc(v.t);
+    let tag = q && v.g ? v.g.join("·") + " · " : "";
+    if (q && !norm(v.t).includes(norm(q)) && v.k) {
+      const kw = v.k.split(" ").find(w => norm(w).includes(norm(q)));
+      if (kw) tag = `${highlight(kw, q)} 포함 · ` + tag;
+    }
+    if (!v.u) return `<li><div class="row soon">
+      <span class="thumb">${CLOCK}</span>
+      <span class="meta"><strong>${title}</strong><small>${tag}영상을 준비하고 있어요</small></span>
+    </div></li>`;
+    const id = ytId(v.u);
+    return `<li><button type="button" class="row" data-t="${esc(v.t)}" data-u="${v.u}">
+      <span class="thumb" style="background:${TINTS[i % 3]}">
+        <img src="${thumb(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <span class="mini">${PLAY_MINI}</span>
+      </span>
+      <span class="meta"><strong>${title}</strong><small>${tag}학과 소개 영상${v.n ? " · " + v.n : ""}</small></span>
+    </button></li>`;
+  }).join("")}</ul>`;
+}
+function tiles(){
+  return `<ul class="grid">${SEASONS.map(s => `<li>
+    <button type="button" class="tile" style="--c:${s.color}" data-t="${s.title}" data-u="${s.url}">
+      <span class="ph" style="display:block"><img src="${thumb(ytId(s.url), true)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span class="mini">${PLAY_MINI}</span></span>
+      <span class="cap"><span class="dot" aria-hidden="true"></span><b>${s.label}</b></span>
+    </button></li>`).join("")}</ul>`;
+}
+
+let tab = "human", query = "";
+function renderTabs(){
+  $("#tabs").innerHTML = TABS.map(t =>
+    `<button type="button" role="tab" class="tab" id="tab-${t.id}" aria-selected="${t.id === tab}" tabindex="${t.id === tab ? 0 : -1}" data-id="${t.id}">${t.label}</button>`
+  ).join("");
+  $("#tabs").classList.toggle("dim", !!query);
+  $("#panel").setAttribute("aria-labelledby", "tab-" + tab);
+}
+function renderPanel(){
+  let html = "";
+  if (query){
+    const nq = norm(query);
+    const found = DEPTS.filter(d => norm(d.t + (d.k || "")).includes(nq));
+    if (!found.length) {
+      const soon = DEPTS.filter(d => !d.u).map(d => esc(d.t)).join(", ");
+      html = `<div class="empty"><b>찾는 학과가 없어요</b>학과명의 일부만 입력해 보세요. (예: 경영, 공학, 미디어)
+        <span class="soon-note">아래 학과는 영상을 준비하고 있어요<br>${soon}</span></div>`;
+    }
+    else {
+      html = `<p class="count">'${esc(query)}' 검색 결과 · ${count(found)}</p>` + rows(found, query);
+      /* 준비 중인 학과가 있으면 같은 대학의 다른 영상 추천 */
+      const colleges = [...new Set(found.filter(d => !d.u).map(d => d.c))];
+      colleges.forEach(c => {
+        const more = DEPTS.filter(d => d.c === c && d.u && !found.includes(d));
+        if (more.length) html += `<h2 class="section-h">같은 ${esc(c)} 영상 <span>${more.length}편</span></h2>` + rows(more);
+      });
+    }
+  }
+  else if (tab === "human")  html = `<p class="count">인문계열 ${count(HUMAN)}</p>` + rows(HUMAN);
+  else if (tab === "nature") html = `<p class="count">자연계열 ${count(NATURE)}</p>` + rows(NATURE);
+  else if (tab === "campus") html = `<p class="count">캠퍼스 사계 <b>${SEASONS.length}</b>편</p>` + tiles();
+  else html =
+      `<h2 class="section-h">캠퍼스 <span>${SEASONS.length}편</span></h2>${tiles()}`
+    + `<h2 class="section-h">학과 소개(인문) <span>${count(HUMAN).replace(/<\/?b>/g, "")}</span></h2>${rows(HUMAN)}`
+    + `<h2 class="section-h">학과 소개(자연) <span>${count(NATURE).replace(/<\/?b>/g, "")}</span></h2>${rows(NATURE)}`;
+  $("#panel").innerHTML = html;
+}
+const filterTop = () => $("#filter").getBoundingClientRect().top + window.scrollY;
+function selectTab(id, focus){
+  tab = id;
+  if (query) setQuery("");
+  renderTabs(); renderPanel();
+  if (focus) $("#tab-" + id).focus();
+  const top = filterTop();
+  if (window.scrollY > top) window.scrollTo({ top, behavior:"smooth" });
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) selectTab(b.dataset.id); });
+$("#tabs").addEventListener("keydown", e => {
+  const i = TABS.findIndex(t => t.id === tab);
+  if (e.key === "ArrowRight") selectTab(TABS[(i + 1) % TABS.length].id, true);
+  if (e.key === "ArrowLeft")  selectTab(TABS[(i + TABS.length - 1) % TABS.length].id, true);
+});
+$("#panel").addEventListener("click", e => {
+  const b = e.target.closest("[data-u]"); if (b) openPlayer(b.dataset.t, b.dataset.u);
+});
+
+/* ── 검색 ── */
+function setQuery(v){
+  query = v.trim(); $("#q").value = v;
+  $("#clearQ").classList.toggle("show", !!v);
+}
+$("#q").addEventListener("input", e => { setQuery(e.target.value); renderTabs(); renderPanel(); });
+$("#q").addEventListener("focus", () => { const top = filterTop(); if (window.scrollY < top - 1) window.scrollTo({ top, behavior:"smooth" }); });
+$("#q").addEventListener("keydown", e => {
+  if (e.key === "Enter") e.target.blur();
+  if (e.key === "Escape") { setQuery(""); renderTabs(); renderPanel(); }
+});
+$("#clearQ").addEventListener("click", () => { setQuery(""); renderTabs(); renderPanel(); $("#q").focus(); });
+
+/* ── 플레이어 ── */
+let lastFocus = null;
+function openPlayer(title, url){
+  const id = ytId(url); lastFocus = document.activeElement;
+  $("#modalTitle").textContent = title;
+  $("#sheet").classList.toggle("vertical", isShort(url));
+  /* PC에서 파일로 직접 열면 유튜브가 재생을 막으므로(Error 153) 화면 안에 안내 표시 */
+  if (location.protocol === "file:") $("#frame").innerHTML =
+    `<div class="local">PC에서 파일로 열면 유튜브 정책상 이 화면에서 재생이 안 돼요.<br>깃허브 주소에서는 여기서 바로 재생됩니다.
+       <a href="${url}" target="_blank" rel="noopener">유튜브에서 보기 ↗</a></div>`;
+  else $("#frame").innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" referrerpolicy="strict-origin-when-cross-origin"
+    title="${esc(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  $("#ytLink").href = url;
+  $("#ytLink").hidden = location.protocol === "file:";
+  $("#modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("#closeBtn").focus();
+}
+function closePlayer(){
+  $("#modal").classList.remove("open");
+  $("#frame").innerHTML = "";
+  document.body.style.overflow = "";
+  if (lastFocus) lastFocus.focus();
+}
+$("#closeBtn").addEventListener("click", closePlayer);
+$("#modal").addEventListener("click", e => { if (e.target.id === "modal") closePlayer(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#modal").classList.contains("open")) closePlayer(); });
+
+
+renderSeasons(); renderTabs(); renderPanel();
+</script>
 <!-- 공용 하단 메뉴 (미리 보기 · 퀴즈 룰렛 · 응원 카드) -->
-<script src="gnb.js?v=2" data-current="roulette"></script>
+<script src="gnb.js?v=2" data-current="preview"></script>
 </body>
 </html>
